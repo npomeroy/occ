@@ -1,0 +1,8 @@
+Package: occ
+Type: Package
+Title: OCC instrument processing
+Version: 0.1.1
+Author: Hannah Barkley
+Maintainer: Hannah Barkley <hannah.barkley@noaa.gov>
+Description: Processes OCC field instrument data
+Depends: oce, tools, REdaS, lubridate, shiny, plotly, shinyalert, shinyjs, htmlwidgets
