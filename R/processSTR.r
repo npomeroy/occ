@@ -21,7 +21,6 @@ processSTR = function(file) {
   # Create user interface. This bit of code defines what will appear on the UI.
   ui <- fluidPage(mainPanel(
     br(),
-    actionButton("close", "Stop app"),
 
     # Paste file name at top of page
     h2(paste0(file_path_sans_ext(basename(
@@ -229,18 +228,28 @@ processSTR = function(file) {
         str.subset = subset(str,
                             DateTime >= vals$start.time$x &
                               DateTime <= vals$end.time$x)
-        str.df = str.subset[c('DateTime', 'Temperature')]
-        colnames(str.df) = c('UTCDateTime', 'Temperature')
-        str.df$UTCDateTime = ymd_hms(str.df$UTCDateTime, tz = "UTC")
+        str.subset$UTCDateTime = ymd_hms(str.subset$DateTime, tz = "UTC")
+        str.subset$Year = year(str.subset$UTCDateTime)
+        str.subset$Month = month(str.subset$UTCDateTime)
+        str.subset$Day = day(str.subset$UTCDateTime)
+        str.subset$Hour = hour(str.subset$UTCDateTime)
+        str.subset$Minute = minute(str.subset$UTCDateTime)
+        str.subset$Second = second(str.subset$UTCDateTime)
 
-        write.csv(str.df,
+        str.df = str.subset[c("Year","Month","Day","Hour","Minute","Second","Temperature")]
+
+
+
+        write.table(str.df,
                   paste0(
                     dirname(file),
                     "/",
                     file_path_sans_ext(basename(file)),
-                    "_trim.csv"
+                    ".cdp"
                   ),
-                  row.names = FALSE)
+                  row.names = FALSE,
+                  col.names = FALSE,
+                  sep = "\t")
       }
     })
 
