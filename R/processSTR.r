@@ -6,8 +6,10 @@ processSTR = function(file) {
   #Load data
   test = read.csv(file, header = FALSE)[1:20 ,]
 
+  #Find number of rows to skip in header
   skip = min(which(test == "Date")) - 1
 
+  #Skip header
   str = read.csv(file, skip = skip)
 
   #Concatenate date and time
