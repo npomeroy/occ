@@ -4,7 +4,11 @@ processSTR = function(file) {
   Sys.setenv(TZ = 'UTC')
 
   #Load data
-  str = read.csv(file)
+  test = read.csv(file, header = FALSE)[1:20 ,]
+
+  skip = min(which(test == "Date")) - 1
+
+  str = read.csv(file, skip = skip)
 
   #Concatenate date and time
   str$DateTime = ymd_hms(paste0(str$Date, str$Time), tz = "UTC")
@@ -26,13 +30,15 @@ processSTR = function(file) {
     h6("(Be patient...the plots may take a minute to load!)"),
     br(),
 
-    h5("Here is the raw STR time series:"),
+    h5("1. Review the entire raw time series."),
 
     # Display the raw time series
     plotlyOutput("whole.ts", height = "200px"),
 
+    br(),
+
     h5(
-      "The plots below show the the first and last month of the STR time series. Click on the time series to select start and end points."
+      "2. Click on time series below to select in situ start and end points. Gray scroll bars at bottom of plots adjust the time windows."
     ),
 
     # Disploy the start and end plots of the time series
@@ -50,23 +56,23 @@ processSTR = function(file) {
       column(6, verbatimTextOutput("end.select"))
     ),
 
-    h5("Here's what the clean time series looks like:"),
+    h5("3. Review the resulting trimmed time series based on start and end time selected."),
 
     # Display the trimmed time series
     plotlyOutput("cut.ts", height = "200px"),
 
     h5(
-      "If you are happy with the clean time series, select the 'Save as CDP' button. Otherwise, continue to adjust start and end dates."
+      "4. If you are happy with the trimmed time series, click the 'Save' button. A 'File saved' message will appear when file has saved successfully."
     ),
 
-    h5(
-      "Once you have saved the CDP file, select 'Close Window' to exit the app."
-    ),
-
-    # Create a"Save as CDP" button
-    actionButton("save", "Save as CDP"),
+     # Create a save button
+    actionButton("save", "Save"),
 
     useShinyalert(),
+
+    h5(
+      "5. Once you have saved the file, click the 'Stop' button to stop the app."
+    ),
 
     # Create a "Close Window" button
     useShinyjs(),
@@ -230,7 +236,7 @@ processSTR = function(file) {
                     dirname(file),
                     "/",
                     file_path_sans_ext(basename(file)),
-                    ".cdp"
+                    "_trim.csv"
                   ),
                   row.names = FALSE)
       }
