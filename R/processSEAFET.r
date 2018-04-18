@@ -1,8 +1,8 @@
 processSEAFET = function(file,
                          tz.in = "UTC",
                          tz.out = "UTC",
-                         csv = TRUE) {
-
+                         csv = TRUE,
+                         average = FALSE) {
   # Read seaFET CSV data
 
   test = read.csv(file, header = FALSE)
@@ -26,16 +26,28 @@ processSEAFET = function(file,
   processed = data.frame(date, pH_ext, temp)
   colnames(processed) = c('DateTime', 'pH', 'Temp')
 
+  if (average == TRUE) {
+    processed = processed %>%
+      group_by(round_date(processed$DateTime,"5 minutes")) %>%
+      summarize(
+        pH = mean(pH, na.rm = TRUE),
+        Temp = mean(Temp, na.rm = TRUE)
+      )
+    colnames(processed) = c('DateTime', 'pH', 'Temp')
+  }
+
 
   if (csv == TRUE) {
-    write.csv(processed,
-              paste0(
-                dirname(file),
-                '/',
-                file_path_sans_ext(basename(file)),
-                '_processed.csv'
-              ),
-              row.names = FALSE)
+    write.csv(
+      processed,
+      paste0(
+        dirname(file),
+        '/',
+        file_path_sans_ext(basename(file)),
+        '_processed.csv'
+      ),
+      row.names = FALSE
+    )
   }
 
   return(processed)

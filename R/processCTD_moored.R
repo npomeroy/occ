@@ -27,7 +27,7 @@ processCTD_moored = function(file,
 
     date = with_tz(date, tz = tz.out)
 
-    df = data.frame(name,
+    df.raw = data.frame(name,
                     date,
                     pressure,
                     depth,
@@ -35,7 +35,7 @@ processCTD_moored = function(file,
                     conductivity,
                     salinity,
                     sigmaT)
-    colnames(df) = c(
+    colnames(df.raw) = c(
       'ShallowCTDID',
       'DateTime',
       'Pressure_db',
@@ -46,10 +46,14 @@ processCTD_moored = function(file,
       'Density_Sigmat'
     )
 
+    df = subset(df.raw, Saln_PSU > 20)
+
     seafet.time = format(date, format = "%Y-%m-%d %H:%M:%S")
-    df.seafet = data.frame(seafet.time,
+    df.seafet.raw = data.frame(seafet.time,
                            temperature,
                            salinity)
+
+    df.seafet = subset(df.seafet.raw, salinity > 20)
 
   }
   if (SN3029 == TRUE) {
