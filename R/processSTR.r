@@ -1,10 +1,9 @@
 processSTR = function(file) {
-
   # Set environment variables to UTC
   Sys.setenv(TZ = 'UTC')
 
   #Load data
-  test = read.csv(file, header = FALSE)[1:20 ,]
+  test = read.csv(file, header = FALSE)[1:20 , ]
 
   #Find number of rows to skip in header
   skip = min(which(test == "Date")) - 1
@@ -19,80 +18,82 @@ processSTR = function(file) {
   jscode = 'shinyjs.closeWindow = function() { window.close(); }'
 
   # Create user interface. This bit of code defines what will appear on the UI.
-  ui <- fluidPage(mainPanel(
-    br(),
+  ui <- fluidPage(
+    mainPanel(
+      br(),
 
-    # Paste file name at top of page
-    h2(paste0(file_path_sans_ext(basename(
-      file
-    )))),
+      # Paste file name at top of page
+      h2(paste0(file_path_sans_ext(basename(
+        file
+      )))),
 
-    # "Be patient" text...these datasets are huge!
-    h6("(Be patient...the plots may take a minute to load!)"),
-    br(),
+      # "Be patient" text...these datasets are huge!
+      h6("(Be patient...the plots may take a minute to load!)"),
+      br(),
 
-    h5("1. Review the entire raw time series."),
+      h5("1. Review the entire raw time series."),
 
-    # Display the raw time series
-    plotlyOutput("whole.ts", height = "200px"),
+      # Display the raw time series
+      plotlyOutput("whole.ts", height = "200px"),
 
-    br(),
+      br(),
 
-    h5(
-      "2. Click on time series below to select in situ start and end points. Gray scroll bars at bottom of plots adjust the time windows."
-    ),
+      h5(
+        "2. Click on time series below to select in situ start and end points. Gray scroll bars at bottom of plots adjust the time windows."
+      ),
 
-    # Disploy the start and end plots of the time series
-    fixedRow(column(
-      6, plotlyOutput("start.plot", height = "400px")
-    ),
-    column(
-      6, plotlyOutput("end.plot", height = "400px")
-    ),
-    style = 'padding:40px;'),
+      # Disploy the start and end plots of the time series
+      fixedRow(column(
+        6, plotlyOutput("start.plot", height = "400px")
+      ),
+      column(
+        6, plotlyOutput("end.plot", height = "400px")
+      ),
+      style = 'padding:40px;'),
 
-    # Display the selected start and end times
-    fixedRow(
-      column(6, verbatimTextOutput("start.select")),
-      column(6, verbatimTextOutput("end.select"))
-    ),
+      # Display the selected start and end times
+      fixedRow(
+        column(6, verbatimTextOutput("start.select")),
+        column(6, verbatimTextOutput("end.select"))
+      ),
 
-    h5("3. Review the resulting trimmed time series based on start and end time selected."),
+      h5(
+        "3. Review the resulting trimmed time series based on start and end time selected."
+      ),
 
-    # Display the trimmed time series
-    plotlyOutput("cut.ts", height = "200px"),
+      # Display the trimmed time series
+      plotlyOutput("cut.ts", height = "200px"),
 
-    h5(
-      "4. If you are happy with the trimmed time series, click the 'Save' button. A 'File saved' message will appear when file has saved successfully."
-    ),
+      h5(
+        "4. If you are happy with the trimmed time series, click the 'Save' button. A 'File saved' message will appear when file has saved successfully."
+      ),
 
-     # Create a save button
-    actionButton("save", "Save"),
+      # Create a save button
+      actionButton("save", "Save"),
 
-    useShinyalert(),
+      useShinyalert(),
 
-    h5(
-      "5. Once you have saved the file, click the 'Stop' button to stop the app."
-    ),
+      h5(
+        "5. Once you have saved the file, click the 'Stop' button to stop the app."
+      ),
 
-    # Create a "Close Window" button
-    useShinyjs(),
+      # Create a "Close Window" button
+      useShinyjs(),
 
-    extendShinyjs(text = jscode, functions = c("closeWindow")),
+      extendShinyjs(text = jscode, functions = c("closeWindow")),
 
-    actionButton("close", "Stop app"),
+      actionButton("close", "Stop app"),
 
-    br(),
-    br(),
-    br(),
-    br(),
-    br()
-  )
+      br(),
+      br(),
+      br(),
+      br(),
+      br()
+    )
   )
 
   # This code creates the shiny server (i.e. the code that the app is actually running)
   server <- function(input, output) {
-
     # Create start and end time variables that change based on user input
     vals = reactiveValues(start.time = NULL,
                           end.time = NULL)
@@ -117,22 +118,29 @@ processSTR = function(file) {
         y = ~ Temperature,
         mode = 'lines',
         type = 'scatter',
-        source = 'S', # Connect this plot to the selection of start time
+        source = 'S',
+        # Connect this plot to the selection of start time
         hoverinfo = 'none' # Remove the default hover boxes
       ) %>%
         layout(
           title = 'Select START point',
           xaxis = list(
-            rangeslider = list(type = "date"), # Add a range slider at the bottom of the plot
-            spikemode = "across", # Add crosshairs
-            spikethickness = 0.5, # Crosshair thickness
-            spikecolor = "black", # Crosshair color
-            spikedash = "line", # Make crosshairs a solid line
+            rangeslider = list(type = "date"),
+            # Add a range slider at the bottom of the plot
+            spikemode = "across",
+            # Add crosshairs
+            spikethickness = 0.5,
+            # Crosshair thickness
+            spikecolor = "black",
+            # Crosshair color
+            spikedash = "line",
+            # Make crosshairs a solid line
             showspikes = TRUE,
             range = c(min(str$DateTime), (min(str$DateTime) + months(1))) # Define x axis range
           ),
           yaxis = list(
-            spikemode = "across", #Same crosshair properties but for y axis
+            spikemode = "across",
+            #Same crosshair properties but for y axis
             spikemode = "across",
             spikethickness = 0.5,
             spikecolor = "black",
@@ -140,9 +148,9 @@ processSTR = function(file) {
             showspikes = TRUE
           )
         ) %>% onRender(
-        "function(el, x) {
-        Plotly.d3.select('.cursor-crosshair').style('cursor', 'default')} "
-      )
+          "function(el, x) {
+          Plotly.d3.select('.cursor-crosshair').style('cursor', 'default')} "
+        )
 
     })
     output$start.select = renderPrint ({
@@ -216,9 +224,9 @@ processSTR = function(file) {
           mode = 'lines',
           type = 'scatter'
         ) %>%
-          layout(xaxis = list(
-            range = c(vals$start.time$x, vals$end.time$x)
-          ))
+          layout(xaxis = list(range = c(
+            vals$start.time$x, vals$end.time$x
+          )))
       })
     })
 
@@ -236,20 +244,34 @@ processSTR = function(file) {
         str.subset$Minute = minute(str.subset$UTCDateTime)
         str.subset$Second = second(str.subset$UTCDateTime)
 
-        str.df = str.subset[c("Year","Month","Day","Hour","Minute","Second","Temperature")]
+        str.df = str.subset[c("Year",
+                              "Month",
+                              "Day",
+                              "Hour",
+                              "Minute",
+                              "Second",
+                              "Temperature")]
 
 
 
-        write.table(str.df,
-                  paste0(
-                    dirname(file),
-                    "/",
-                    file_path_sans_ext(basename(file)),
-                    ".cdp"
-                  ),
-                  row.names = FALSE,
-                  col.names = FALSE,
-                  sep = "\t")
+        output.file = file(paste0(
+          dirname(file),
+          "/",
+          file_path_sans_ext(basename(file)),
+          ".cdp"
+        ),
+        "wb")
+
+        write.table(
+          str.df,
+          file = output.file,
+          row.names = FALSE,
+          col.names = FALSE,
+          sep = "\t",
+          eol = "\n"
+        )
+
+        close(output.file)
       }
     })
 
