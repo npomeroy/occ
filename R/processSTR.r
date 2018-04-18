@@ -1,9 +1,10 @@
-processSTR = function(file) {
+processSTR = function(file,
+                      write.csv = FALSE) {
   # Set environment variables to UTC
   Sys.setenv(TZ = 'UTC')
 
   #Load data
-  test = read.csv(file, header = FALSE)[1:20 , ]
+  test = read.csv(file, header = FALSE)[1:20 ,]
 
   #Find number of rows to skip in header
   skip = min(which(test == "Date")) - 1
@@ -272,6 +273,20 @@ processSTR = function(file) {
         )
 
         close(output.file)
+
+        if (write.csv == TRUE) {
+          write.csv(
+            str.subset[c("UTCDateTime", "Temperature")],
+            paste0(
+              dirname(file),
+              "/",
+              file_path_sans_ext(basename(file)),
+              "_processed.csv"
+            ),
+            row.names = FALSE
+          )
+        }
+
       }
     })
 
@@ -289,4 +304,5 @@ processSTR = function(file) {
 
   # Run the shiny app
   shinyApp(ui, server)
+
   }
