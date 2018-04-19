@@ -1,2 +1,2 @@
 exportPattern("^[[:alpha:]]+")
-import(oce, tools, REdaS, lubridate, shiny, plotly, shinyalert, shinyjs, htmlwidgets, plyr, writexl, ggplot2, viridis, scales, dplyr)
+import(oce, tools, REdaS, lubridate, shiny, plotly, shinyalert, shinyjs, htmlwidgets, plyr, writexl, ggplot2, viridis, scales, dplyr, reshape2)
