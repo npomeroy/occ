@@ -1,20 +1,30 @@
-plotDS = function(speed.csv,
-                  direction.csv,
-                  pressure.csv,
-                  ctd.csv,
-                  seafet.csv,
-                  puc.csv = NULL,
+plotDS = function(speed,
+                  direction,
+                  pressure,
+                  ctd,
+                  seafet,
+                  puc = NULL,
+                  read.csv = TRUE,
                   plot.tz = "UTC",
                   time.step = "4 hour",
                   temp.range = NULL,
                   sal.range = NULL,
                   pH.range = NULL) {
   # Read csv files
-  speed = read.csv(speed.csv, check.names = FALSE)
-  direction = read.csv(direction.csv, check.names = FALSE)
-  pressure = read.csv(pressure.csv)
-  ctd = read.csv(ctd.csv)
-  seafet = read.csv(seafet.csv)
+
+  if (read.csv == TRUE) {
+    speed = read.csv(speed, check.names = FALSE)
+    direction = read.csv(direction, check.names = FALSE)
+    pressure = read.csv(pressure)
+    ctd = read.csv(ctd)
+    seafet = read.csv(seafet)
+  } else {
+    speed = speed
+    direction = direction
+    pressure = pressure
+    ctd = ctd
+    seafet = seafet
+  }
 
   # Plot ADCP data
   speed$DateTimeUTC = ymd_hms(speed$DateTimeUTC)
@@ -154,7 +164,7 @@ plotDS = function(speed.csv,
   seafet.time = subset(seafet, DateTime >= time.min &
                          DateTime <= time.max)
 
-  if (is.null(puc.csv) == TRUE) {
+  if (is.null(puc) == TRUE) {
     pH.plot = ggplot() +
       geom_line(aes(x = seafet.time$DateTime, y = seafet.time$pH),
                 col = 'dodgerblue',
@@ -179,7 +189,7 @@ plotDS = function(speed.csv,
         scale_y_continuous(limits = c(pH.range[1], pH.range[2]))
       }
   } else {
-    puc = read.csv(puc.csv)
+    puc = read.csv(puc)
     puc$DateTimeUTC = ymd_hms(puc$DateTimeUTC)
 
     pH.plot = ggplot() +
