@@ -10,8 +10,8 @@ plotDS = function(speed,
                   temp.range = NULL,
                   sal.range = NULL,
                   pH.range = NULL) {
-  # Read csv files
 
+  # Read csv files
   if (read.csv == TRUE) {
     speed = read.csv(speed, check.names = FALSE)
     direction = read.csv(direction, check.names = FALSE)
@@ -189,8 +189,12 @@ plotDS = function(speed,
         scale_y_continuous(limits = c(pH.range[1], pH.range[2]))
       }
   } else {
-    puc = read.csv(puc)
-    puc$DateTimeUTC = ymd_hms(puc$DateTimeUTC)
+    if (read.csv == TRUE) {
+      puc = read.csv(puc)
+      puc$DateTimeUTC = ymd_hms(puc$DateTimeUTC)
+    } else {
+      puc = puc
+    }
 
     pH.plot = ggplot() +
       geom_line(aes(x = seafet.time$DateTime, y = seafet.time$pH),
@@ -235,4 +239,5 @@ plotDS = function(speed,
       size = "last"
     )
   ))
+
 }

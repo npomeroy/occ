@@ -2,12 +2,12 @@ processPUC = function(puc.file,
                       ctd.file,
                       tz.in = "UTC",
                       tz.out = "UTC",
-                      csv = TRUE) {
+                      write.csv = TRUE) {
 
   puc.samples = read.csv(puc.file)
   ctd.data = read.csv(ctd.file)
 
-  # Reformat PUC sample start time
+    # Reformat PUC sample start time
   puc.samples$DateTime_LocalStart = mdy_hm(puc.samples$DateTimeLocal, tz = tz.in)
 
   # Convert PUC local time to UTC
@@ -35,7 +35,11 @@ processPUC = function(puc.file,
                                                       TRUE)
   }
 
-  if (csv == TRUE) {
+  return(list(
+    puc = puc.samples
+  ))
+
+  if (write.csv == TRUE) {
     write.csv(
       puc.samples,
       paste0(

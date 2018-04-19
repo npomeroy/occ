@@ -1,4 +1,4 @@
-processADCP = function(file, csv = TRUE) {
+processADCP = function(file, write.csv = TRUE) {
 
   data.all = read.aquadoppProfiler(file,
                                    tz = 'UTC',
@@ -71,7 +71,7 @@ processADCP = function(file, csv = TRUE) {
   colnames(speed.df) = c("DateTimeUTC", paste0(round(Distance, digits = 2)))
   colnames(direction.df) = c("DateTimeUTC", paste0(round(Distance, digits = 2)))
 
-  if (csv == TRUE) {
+  if (write.csv == TRUE) {
     write.csv(speed.df,
               paste0(dirname(file), '/', name, '_speed.csv'),
               row.names = FALSE)

@@ -1,7 +1,7 @@
 processSEAFET = function(file,
                          tz.in = "UTC",
                          tz.out = "UTC",
-                         csv = TRUE,
+                         write.csv = TRUE,
                          average = FALSE) {
   # Read seaFET CSV data
 
@@ -37,7 +37,7 @@ processSEAFET = function(file,
   }
 
 
-  if (csv == TRUE) {
+  if (write.csv == TRUE) {
     write.csv(
       processed,
       paste0(

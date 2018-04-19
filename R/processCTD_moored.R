@@ -1,7 +1,7 @@
 processCTD_moored = function(file,
                              tz.in = "UTC",
                              tz.out = "UTC",
-                             csv = TRUE,
+                             write.csv = TRUE,
                              SN3029 = FALSE) {
   if (SN3029 == FALSE) {
     data = read.ctd.sbe(file)
@@ -102,7 +102,7 @@ processCTD_moored = function(file,
 
   }
 
-  if (csv == TRUE) {
+  if (write.csv == TRUE) {
     write.csv(df,
               paste0(dirname(file), '/', name, '_processed.csv'),
               row.names = FALSE)

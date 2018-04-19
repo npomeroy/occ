@@ -6,12 +6,12 @@
 \description{Converts a PRF file collected by a Nortek Aquadopp to speed, direction, and pressure data frames.}
 
 \usage{
-processADCP(file, csv = TRUE)
+processADCP(file, write.csv = TRUE)
 }
 
 \arguments{
 \item{file}{PRF file to process}
-\item{csv}{Specify \code{FALSE} to suppress CSV output
+\item{write.csv}{Specify \code{FALSE} to suppress CSV output
 }
 }
 
