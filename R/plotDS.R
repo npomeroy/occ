@@ -10,7 +10,6 @@ plotDS = function(speed,
                   temp.range = NULL,
                   sal.range = NULL,
                   pH.range = NULL) {
-
   # Read csv files
   if (read.csv == TRUE) {
     speed = read.csv(speed, check.names = FALSE)
@@ -25,21 +24,21 @@ plotDS = function(speed,
     ctd = ctd
     seafet = seafet
   }
-
+  
   # Plot ADCP data
   speed$DateTimeUTC = ymd_hms(speed$DateTimeUTC)
   direction$DateTimeUTC = ymd_hms(direction$DateTimeUTC)
   pressure$DateTimeUTC = ymd_hms(pressure$DateTimeUTC)
-
+  
   adcp.long.speed = melt(speed, id.vars = 'DateTimeUTC')
   adcp.long.direction = melt(direction, id.vars = 'DateTimeUTC')
-
+  
   colnames(adcp.long.speed) = c("DateTimeUTC", "Height", "Speed")
   colnames(adcp.long.direction) = c("DateTimeUTC", "Height", "Direction")
-
+  
   time.min = min(adcp.long.speed$DateTimeUTC)
   time.max = max(adcp.long.speed$DateTimeUTC)
-
+  
   speed.plot = ggplot() +
     geom_raster(
       aes(
@@ -69,7 +68,7 @@ plotDS = function(speed,
       legend.box.margin = margin(-5, -5, -5, -5),
       axis.title.x = element_blank()
     )
-
+  
   direction.plot = ggplot() +
     geom_raster(
       aes(
@@ -100,7 +99,7 @@ plotDS = function(speed,
       legend.box.margin = margin(-5, -5, -5, -5),
       axis.title.x = element_blank()
     )
-
+  
   pressure.plot = ggplot() +
     geom_line(
       aes(x = pressure$DateTimeUTC, y = pressure$Pressure),
@@ -117,10 +116,10 @@ plotDS = function(speed,
     ylab('P (dbar)') +
     theme_bw() +
     theme(axis.title.x = element_blank())
-
+  
   # Plot CTD data
   ctd$DateTime = ymd_hms(ctd$DateTime)
-
+  
   temp.plot = ggplot() +
     geom_line(aes(x = ctd$DateTime, y = ctd$Temp_DegC),
               col = 'dodgerblue',
@@ -138,7 +137,7 @@ plotDS = function(speed,
     if (is.null(temp.range) == FALSE) {
       scale_y_continuous(limits = c(temp.range[1], temp.range[2]))
     }
-
+  
   sal.plot = ggplot() +
     geom_line(aes(x = ctd$DateTime, y = ctd$Saln_PSU),
               col = 'dodgerblue',
@@ -156,14 +155,14 @@ plotDS = function(speed,
     if (is.null(sal.range) == FALSE) {
       scale_y_continuous(limits = c(sal.range[1], sal.range[2]))
     }
-
-
+  
+  
   # Plot pH and PUC data
   seafet$DateTime = ymd_hms(seafet$DateTime)
-
+  
   seafet.time = subset(seafet, DateTime >= time.min &
                          DateTime <= time.max)
-
+  
   if (is.null(puc) == TRUE) {
     pH.plot = ggplot() +
       geom_line(aes(x = seafet.time$DateTime, y = seafet.time$pH),
@@ -195,7 +194,7 @@ plotDS = function(speed,
     } else {
       puc = puc
     }
-
+    
     pH.plot = ggplot() +
       geom_line(aes(x = seafet.time$DateTime, y = seafet.time$pH),
                 col = 'dodgerblue',
@@ -226,18 +225,30 @@ plotDS = function(speed,
         scale_y_continuous(limits = c(pH.range[1], pH.range[2]))
       }
   }
-
+  
   # Combine all plots
-  return(grid.draw(
-    rbind(
-      ggplotGrob(speed.plot),
-      ggplotGrob(direction.plot),
-      ggplotGrob(pressure.plot),
-      ggplotGrob(temp.plot),
-      ggplotGrob(sal.plot),
-      ggplotGrob(pH.plot),
-      size = "last"
+  
+  all.ds = ggarrange(speed.plot,
+            direction.plot,
+            pressure.plot,
+            temp.plot,
+            sal.plot,
+            pH.plot,
+            nrow = 6,
+            align = 'v')
+  
+  return(
+    list(
+      speed.plot = speed.plot,
+      direction.plot = direction.plot,
+      pressure.plot = pressure.plot,
+      temp.plot = temp.plot,
+      sal.plot = sal.plot,
+      pH.plot = pH.plot,
+      all.ds = all.ds
     )
-  ))
-
+  )
+  
+  print(all.ds)
+  
 }
