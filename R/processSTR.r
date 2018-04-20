@@ -273,6 +273,20 @@ processSTR = function(file,
         )
 
         close(output.file)
+        
+        plot = ggplot(data = str.subset) +
+          geom_line(aes(x = UTCDateTime, y = Temperature), col = 'dodgerblue') +
+          theme_bw() +
+          scale_x_datetime(
+            breaks = date_breaks("4 months"),
+            labels = date_format("%m/%y")
+          ) +
+          ylab("Temp (deg C)") +
+          theme(
+            axis.title.x = element_blank()
+          )
+        
+        ggsave(filename = paste0(dirname(file),"/",file_path_sans_ext(basename(file)), ".png"), plot = plot, width = 12, height = 3)
 
         if (write.csv == TRUE) {
           write.csv(
@@ -286,7 +300,6 @@ processSTR = function(file,
             row.names = FALSE
           )
         }
-
       }
     })
 
