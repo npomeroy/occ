@@ -28,7 +28,7 @@ processSEAFET = function(file,
 
   if (average == TRUE) {
     processed = processed %>%
-      group_by(round_date(processed$DateTime,"5 minutes")) %>%
+      group_by(round_date(processed$DateTime,"1 minute")) %>%
       summarize(
         pH = mean(pH, na.rm = TRUE),
         Temp = mean(Temp, na.rm = TRUE)
