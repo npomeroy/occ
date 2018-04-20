@@ -250,5 +250,5 @@ plotDS = function(speed,
   )
   
   print(all.ds)
-  
+
 }

@@ -25,3 +25,13 @@ plot.tz = "UTC", time.step = "4 hour", temp.range = NULL, sal.range = NULL, pH.r
   \item{sal.range}{Range of plotted salinity data, specify as \code{c(min,max)}. Default is \code{NULL}.}
   \item{pH.range}{Range of plotted pH data, specify as \code{c(min,max)}. Default is \code{NULL}.}
 }
+
+\value{
+\item{speed.plot}{ADCP current speed plot}
+\item{direction.plot}{ADCP current direction plot}
+\item{pressure.plot}{ADCP pressure plot}
+\item{temp.plot}{CTD temperature plot}
+\item{sal.plot}{CTD salinity plot}
+\item{pH.plot}{SeaFET pH plot}
+\item{all.ds}{All plots combined}
+}
