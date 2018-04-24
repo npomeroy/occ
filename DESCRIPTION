@@ -5,4 +5,4 @@ Version: 0.1.2
 Author: Hannah Barkley
 Maintainer: Hannah Barkley <hannah.barkley@noaa.gov>
 Description: Processes OCC field instrument data
-Depends: oce, tools, REdaS, lubridate, shiny, plotly, shinyalert, shinyjs, htmlwidgets, plyr, writexl, ggplot2, viridis, scales, dplyr, reshape2
+Depends: oce, tools, REdaS, lubridate, shiny, plotly, shinyalert, shinyjs, htmlwidgets, plyr, writexl, ggplot2, viridis, scales, dplyr, reshape2, ggpubr

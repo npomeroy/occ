@@ -16,7 +16,7 @@ plot.tz = "UTC", time.step = "4 hour", temp.range = NULL, sal.range = NULL, pH.r
   \item{direction}{ADCP current direction, output of \code{processADCP}.}
   \item{pressure}{ADCP pressure, output of \code{processADCP}.}
   \item{ctd}{Moored CTD time series, output of \code{processCTD_moored}.}
-  \item{seafet}{eaFET pH time series, output of \code{processSEAFET}.}
+  \item{seafet}{SeaFET pH time series, output of \code{processSEAFET}.}
   \item{puc}{PUC water samples, output of \code{processPUC}. Default is \code{NULL}.}
   \item{read.csv}{If \code{TRUE}, read data from CSV files. If \code{FALSE}, read data frames from R workspace. Default is \code{TRUE}.}
   \item{plot.tz}{Time zone to plot. Default is \code{UTC}.}
