@@ -3,7 +3,7 @@ processSTR = function(file) {
   Sys.setenv(TZ = 'UTC')
 
   #Load data
-  test = read.csv(file, header = FALSE)[1:20 , ]
+  test = read.csv(file, header = FALSE)[1:20 ,]
 
   #Find number of rows to skip in header
   skip = min(which(test == "Date")) - 1
@@ -278,7 +278,9 @@ processSTR = function(file) {
           theme_bw() +
           scale_x_datetime(breaks = date_breaks("4 months"),
                            labels = date_format("%m/%y")) +
-          ylab(expression(atop(paste("Temperature (", degree,"C)")))) +
+          ylab(expression(atop(
+            paste("Temperature (", degree, "C)")
+          ))) +
           theme(axis.title.x = element_blank())
 
         box = ggplot(data = data) +
@@ -287,7 +289,7 @@ processSTR = function(file) {
           theme(axis.title.x = element_blank(),
                 axis.title.y = element_blank())
 
-        comb = ggarrange(plot, box, widths = c(6,1))
+        comb = ggarrange(plot, box, widths = c(6, 1))
 
         ggsave(
           filename = paste0(
@@ -302,7 +304,7 @@ processSTR = function(file) {
         )
 
         write.csv(
-          str.subset[c("UTCDateTime", "Temperature")],
+          str.subset[c("DateTimeUTC", "Temperature")],
           paste0(
             dirname(file),
             "/",
