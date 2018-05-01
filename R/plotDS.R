@@ -38,13 +38,20 @@ plotDS = function(speed,
 
   time.min = min(adcp.long.speed$DateTimeUTC)
   time.max = max(adcp.long.speed$DateTimeUTC)
+  height.max = floor(max(pressure$Pressure))
+  
+  adcp.long.speed.sub = subset(adcp.long.speed, as.numeric(as.character(Height)) < height.max)
+  adcp.long.speed.sub$Depth = -1 * (as.numeric(as.character(adcp.long.speed.sub$Height)) - max(as.numeric(as.character(adcp.long.speed.sub$Height))))
 
+  adcp.long.direction.sub = subset(adcp.long.direction, as.numeric(as.character(Height)) < height.max)
+  adcp.long.direction.sub$Depth = -1 * (as.numeric(as.character(adcp.long.direction.sub$Height)) - max(as.numeric(as.character(adcp.long.direction.sub$Height))))
+  
   speed.plot = ggplot() +
     geom_raster(
       aes(
-        x = adcp.long.speed$DateTimeUTC,
-        y = as.numeric(as.character(adcp.long.speed$Height)),
-        fill = adcp.long.speed$Speed
+        x = adcp.long.speed.sub$DateTimeUTC,
+        y = adcp.long.speed.sub$Depth,
+        fill = adcp.long.speed.sub$Speed
       ),
       interpolate = TRUE
     ) +
@@ -55,12 +62,11 @@ plotDS = function(speed,
       labels = date_format("%H:%M", tz = plot.tz),
       expand = c(0, 0)
     ) +
-    scale_y_continuous(limits = c(NA, floor(max(
-      pressure$Pressure
-    ))), expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0),
+    trans = 'reverse') +
     theme_bw() +
     xlab('Time') +
-    ylab('Height (m)') +
+    ylab('Depth (m)') +
     theme(
       legend.position = 'top',
       legend.key.height =  unit(0.1, "in"),
@@ -72,9 +78,9 @@ plotDS = function(speed,
   direction.plot = ggplot() +
     geom_raster(
       aes(
-        x = adcp.long.direction$DateTimeUTC,
-        y = as.numeric(as.character(adcp.long.direction$Height)),
-        fill = adcp.long.direction$Direction
+        x = adcp.long.direction.sub$DateTimeUTC,
+        y = adcp.long.direction.sub$Depth,
+        fill = adcp.long.direction.sub$Direction
       ),
       interpolate = TRUE
     ) +
@@ -86,12 +92,10 @@ plotDS = function(speed,
       labels = date_format("%H:%M", tz = plot.tz),
       expand = c(0, 0)
     ) +
-    scale_y_continuous(limits = c(NA, floor(max(
-      pressure$Pressure
-    ))), expand = c(0, 0)) +
-    theme_bw() +
+    scale_y_continuous(expand = c(0, 0),
+    trans = 'reverse') +
     xlab('Time') +
-    ylab('Height (m)') +
+    ylab('Depth (m)') +
     theme(
       legend.position = 'top',
       legend.key.height =  unit(0.1, "in"),
