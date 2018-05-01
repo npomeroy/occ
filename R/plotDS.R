@@ -137,7 +137,7 @@ plotDS = function(speed,
       expand = c(0, 0)
     ) +
     xlab('Time') +
-    ylab("Temp (deg C") +
+    ylab("Temp (deg C(" +
     theme_bw() +
     theme(axis.title.x = element_blank()) +
     if (is.null(temp.range) == FALSE) {
