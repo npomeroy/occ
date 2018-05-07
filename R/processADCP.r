@@ -1,7 +1,7 @@
-processADCP = function(file, write.csv = TRUE) {
+processADCP = function(file, write.csv = TRUE, tz.in = "UTC") {
 
   data.all = read.aquadoppProfiler(file,
-                                   tz = 'UTC',
+                                   tz = tz.in,
                                    despike = TRUE)
 
   first = min(
@@ -25,7 +25,7 @@ processADCP = function(file, write.csv = TRUE) {
     file,
     from = first,
     to = last,
-    tz = 'UTC',
+    tz = tz.in,
     despike = TRUE
   )
 
@@ -35,7 +35,9 @@ processADCP = function(file, write.csv = TRUE) {
     data.enu = xyzToEnuAdp(data.xyz, declination = 0)
   }
 
-  DateTimeUTC = data.enu[['time']]
+  DateTime = data.enu[['time']]
+  DateTime = force_tz(DateTime, tz = tz.in)
+  DateTimeUTC = with_tz(DateTime, tz = "UTC")
   Distance = data.enu[['distance']]
   Pressure = data.enu[['pressure']]
   Temperature = data.enu[['temperature']]

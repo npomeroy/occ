@@ -6,12 +6,13 @@
 \description{Converts a PRF file collected by a Nortek Aquadopp to speed, direction, and pressure data frames.}
 
 \usage{
-processADCP(file, write.csv = TRUE)
+processADCP(file, write.csv = TRUE, tz.in = "UTC")
 }
 
 \arguments{
 \item{file}{PRF file to process}
 \item{write.csv}{Specify \code{FALSE} to suppress CSV output
+\item{tz.in}{Time zone of raw data, default is \code{UTC}}
 }
 }
 
