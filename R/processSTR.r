@@ -273,23 +273,23 @@ processSTR = function(file) {
 
         close(output.file)
 
-        plot = ggplot(data = str.subset) +
-          geom_line(aes(x = ymd_hms(UTCDateTime), y = Temperature), col = 'dodgerblue') +
-          theme_bw() +
-          scale_x_datetime(breaks = date_breaks("4 months"),
-                           labels = date_format("%m/%y")) +
-          ylab(expression(atop(
-            paste("Temperature (", degree, "C)")
-          ))) +
-          theme(axis.title.x = element_blank())
+plot = ggplot(data = str.subset) +
+  geom_line(aes(x = ymd_hms(DateTime), y = Temperature), col = 'dodgerblue') +
+  theme_bw() +
+  scale_x_datetime(breaks = date_breaks("4 months"),
+                   labels = date_format("%m/%y")) +
+  ylab(expression(atop(
+    paste("Temperature (", degree, "C)")
+  ))) +
+  theme(axis.title.x = element_blank())
 
-        box = ggplot(data = data) +
-          geom_boxplot(aes(x = "", y = Temperature), fill = 'dodgerblue') +
-          theme_bw() +
-          theme(axis.title.x = element_blank(),
-                axis.title.y = element_blank())
+box = ggplot(data = str.subset) +
+  geom_boxplot(aes(x = "", y = Temperature), fill = 'dodgerblue') +
+  theme_bw() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank())
 
-        comb = ggarrange(plot, box, widths = c(6, 1))
+comb = ggarrange(plot, box, widths = c(6, 1))
 
         ggsave(
           filename = paste0(
@@ -304,7 +304,7 @@ processSTR = function(file) {
         )
 
         write.csv(
-          str.subset[c("DateTimeUTC", "Temperature")],
+          str.subset[c("DateTime", "Temperature")],
           paste0(
             dirname(file),
             "/",
