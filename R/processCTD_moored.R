@@ -98,7 +98,7 @@ processCTD_moored = function(file,
     df.seafet = data.frame(seafet.time,
                            temperature,
                            salinity)
-    colnames(df.seafet) = c("date/time", "temperature", "salinity")
+    colnames(df.seafet) = c("datetime", "temperature", "salinity")
 
   }
 
