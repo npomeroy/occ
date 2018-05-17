@@ -54,6 +54,7 @@ processCTD_moored = function(file,
                            salinity)
 
     df.seafet = subset(df.seafet.raw, salinity > 20)
+    colnames(df.seafet) = c("date/time", "temperature", "salinity")
 
   }
   if (SN3029 == TRUE) {
@@ -98,7 +99,7 @@ processCTD_moored = function(file,
     df.seafet = data.frame(seafet.time,
                            temperature,
                            salinity)
-    colnames(df.seafet) = c("datetime", "temperature", "salinity")
+    colnames(df.seafet) = c("date/time", "temperature", "salinity")
 
   }
 
