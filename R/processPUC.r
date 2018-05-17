@@ -35,10 +35,6 @@ processPUC = function(puc.file,
                                                       TRUE)
   }
 
-  return(list(
-    puc = puc.samples
-  ))
-
   if (write.csv == TRUE) {
     write.csv(
       puc.samples,
