@@ -12,5 +12,6 @@ processSEAFET(path, tz.in = "UTC", tz.out = "UTC", write.csv = TRUE)
   \item{tz.in}{Time zone of raw data, default is \code{UTC}}
   \item{tz.out}{Time zone to output data, default is \code{UTC}}
   \item{write.csv}{Specify \code{FALSE} to suppress CSV output}
+  \item{average}{Specify \code{TRUE} to average by one-minute bins}
 }
 \details{External pH is used as processed pH value.}
