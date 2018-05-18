@@ -4,7 +4,7 @@
 \title{Process SeaFET data}
 \description{Converts raw SeaFET output to CSV with date, pH, and temperature}
 \usage{
-processSEAFET(path, tz.in = "UTC", tz.out = "UTC", write.csv = TRUE)
+processSEAFET(path, tz.in = "UTC", tz.out = "UTC", write.csv = TRUE, average = TRUE, corrected = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -13,5 +13,6 @@ processSEAFET(path, tz.in = "UTC", tz.out = "UTC", write.csv = TRUE)
   \item{tz.out}{Time zone to output data, default is \code{UTC}}
   \item{write.csv}{Specify \code{FALSE} to suppress CSV output}
   \item{average}{Specify \code{TRUE} to average by one-minute bins}
+  \item{corrected}{Specify \code{FALSE} for time series not salinity or temperature corrected}
 }
 \details{External pH is used as processed pH value.}
