@@ -53,8 +53,7 @@ processCTD_profile = function(dir) {
       if (is.null(beamtransmission) == FALSE) {
         df$BeamTrans_Percent = beamtransmission
       }
-      
+    }
     write.csv(df, paste0(dir, name, '.csv'), row.names = FALSE)
-    
   }
 }
