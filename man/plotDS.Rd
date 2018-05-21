@@ -7,7 +7,7 @@ Plot diurnal suite instrument data
 Plots ADCP, CTD, and SeaFET time series.
 }
 \usage{
-plotDS(speed, direction, pressure, ctd, seafet, puc = NULL,  read.csv = TRUE,
+plotDS(speed, direction, pressure, ctd, seafet, puc = NULL,  read.csv = TRUE, write.csv = FALSE,
 plot.tz = "UTC", time.step = "4 hour", temp.range = NULL, sal.range = NULL, pH.range = NULL)
 }
 
@@ -19,6 +19,7 @@ plot.tz = "UTC", time.step = "4 hour", temp.range = NULL, sal.range = NULL, pH.r
   \item{seafet}{SeaFET pH time series, output of \code{processSEAFET}.}
   \item{puc}{PUC water samples, output of \code{processPUC}. Default is \code{NULL}.}
   \item{read.csv}{If \code{TRUE}, read data from CSV files. If \code{FALSE}, read data frames from R workspace. Default is \code{TRUE}.}
+    \item{write.csv}{If \code{TRUE}, write trimmed CTD and SeaFET data to CSV files. Default is \code{FALSE}.}
   \item{plot.tz}{Time zone to plot. Default is \code{UTC}.}
   \item{time.step}{Time step to plot. Default is "4 hour".}
   \item{temp.range}{Range of plotted temperature data, specify as \code{c(min,max)}. Default is \code{NULL}.}

@@ -5,6 +5,7 @@ plotDS = function(speed,
                   seafet,
                   puc = NULL,
                   read.csv = TRUE,
+                  write.csv = FALSE,
                   plot.tz = "UTC",
                   time.step = "4 hour",
                   temp.range = NULL,
@@ -124,6 +125,9 @@ plotDS = function(speed,
 
   # Plot CTD data
   ctd$DateTime = ymd_hms(ctd$DateTime)
+  
+  ctd.time = subset(ctd, DateTime >= time.min &
+                         DateTime <= time.max)
 
   temp.plot = ggplot() +
     geom_line(aes(x = ctd$DateTime, y = ctd$Temp_DegC),
@@ -197,9 +201,11 @@ plotDS = function(speed,
   } else {
     if (read.csv == TRUE) {
       puc = read.csv(puc)
-      puc$DateTimeUTC = ymd_hms(puc$DateTimeUTC)
+      puc$DateTimeUTC = mdy_hm(puc$DateTimeUTC)
+      puc.subset = subset(puc, DateTimeUTC >= time.min & DateTimeUTC <= time.max)
     } else {
       puc = puc
+      puc.subset = subset(puc, DateTimeUTC >= time.min & DateTimeUTC <= time.max)
     }
 
     pH.plot = ggplot() +
@@ -207,7 +213,7 @@ plotDS = function(speed,
                 col = 'dodgerblue',
                 cex = 1)  +
       geom_point(
-        aes(x = puc$DateTimeUTC, y = puc$pH),
+        aes(x = puc.subset$DateTimeUTC, y = puc.subset$pH),
         col = 'tomato1',
         pch = 15,
         cex = 2
@@ -232,6 +238,16 @@ plotDS = function(speed,
         scale_y_continuous(limits = c(pH.range[1], pH.range[2]))
       }
   }
+  
+  if (write.csv == TRUE) {
+    write.csv(ctd.time, 
+              paste0(ctd.time$ShallowCTDID[1],'_trimmed.csv'),
+              row.names = FALSE)
+    
+    write.csv(seafet.time, 
+              paste0("seafet",'_trimmed.csv'),
+              row.names = FALSE)
+  } 
 
   # Combine all plots
 
