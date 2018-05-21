@@ -48,7 +48,6 @@ processCTD_moored = function(file,
                       pressure,
                       depth,
                       temperature,
-                      conductivity,
                       salinity,
                       sigmaT)
   colnames(df.raw) = c(
@@ -57,10 +56,13 @@ processCTD_moored = function(file,
     'Pressure_db',
     'Depth_m',
     'Temp_DegC',
-    'Cond_S_per_m',
     'Saln_PSU',
     'Density_Sigmat'
   )
+  
+  if (is.null(conductivity) == FALSE){
+    df.raw$Cond_S_per_m = conductivity
+  }
   
   df = subset(df.raw, Saln_PSU > 20)
   
