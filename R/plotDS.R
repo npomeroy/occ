@@ -25,27 +25,31 @@ plotDS = function(speed,
     ctd = ctd
     seafet = seafet
   }
-
+  
   # Plot ADCP data
   speed$DateTimeUTC = ymd_hms(speed$DateTimeUTC)
   direction$DateTimeUTC = ymd_hms(direction$DateTimeUTC)
   pressure$DateTimeUTC = ymd_hms(pressure$DateTimeUTC)
-
+  
   adcp.long.speed = melt(speed, id.vars = 'DateTimeUTC')
   adcp.long.direction = melt(direction, id.vars = 'DateTimeUTC')
-
+  
   colnames(adcp.long.speed) = c("DateTimeUTC", "Height", "Speed")
   colnames(adcp.long.direction) = c("DateTimeUTC", "Height", "Direction")
-
+  
   time.min = min(adcp.long.speed$DateTimeUTC)
   time.max = max(adcp.long.speed$DateTimeUTC)
   height.max = floor(max(pressure$Pressure))
   
   adcp.long.speed.sub = subset(adcp.long.speed, as.numeric(as.character(Height)) < height.max)
-  adcp.long.speed.sub$Depth = -1 * (as.numeric(as.character(adcp.long.speed.sub$Height)) - max(as.numeric(as.character(adcp.long.speed.sub$Height))))
-
+  adcp.long.speed.sub$Depth = -1 * (as.numeric(as.character(adcp.long.speed.sub$Height)) - max(as.numeric(
+    as.character(adcp.long.speed.sub$Height)
+  )))
+  
   adcp.long.direction.sub = subset(adcp.long.direction, as.numeric(as.character(Height)) < height.max)
-  adcp.long.direction.sub$Depth = -1 * (as.numeric(as.character(adcp.long.direction.sub$Height)) - max(as.numeric(as.character(adcp.long.direction.sub$Height))))
+  adcp.long.direction.sub$Depth = -1 * (as.numeric(as.character(adcp.long.direction.sub$Height)) - max(as.numeric(
+    as.character(adcp.long.direction.sub$Height)
+  )))
   
   speed.plot = ggplot() +
     geom_raster(
@@ -64,7 +68,7 @@ plotDS = function(speed,
       expand = c(0, 0)
     ) +
     scale_y_continuous(expand = c(0, 0),
-    trans = 'reverse') +
+                       trans = 'reverse') +
     theme_bw() +
     xlab('Time') +
     ylab('Depth (m)') +
@@ -75,7 +79,7 @@ plotDS = function(speed,
       legend.box.margin = margin(-5, -5, -5, -5),
       axis.title.x = element_blank()
     )
-
+  
   direction.plot = ggplot() +
     geom_raster(
       aes(
@@ -94,7 +98,7 @@ plotDS = function(speed,
       expand = c(0, 0)
     ) +
     scale_y_continuous(expand = c(0, 0),
-    trans = 'reverse') +
+                       trans = 'reverse') +
     xlab('Time') +
     ylab('Depth (m)') +
     theme(
@@ -104,7 +108,7 @@ plotDS = function(speed,
       legend.box.margin = margin(-5, -5, -5, -5),
       axis.title.x = element_blank()
     )
-
+  
   pressure.plot = ggplot() +
     geom_line(
       aes(x = pressure$DateTimeUTC, y = pressure$Pressure),
@@ -122,18 +126,20 @@ plotDS = function(speed,
     ylab('P (dbar)') +
     theme_bw() +
     theme(axis.title.x = element_blank())
-
+  
   # Plot CTD data
   ctd$DateTime = ymd_hms(ctd$DateTime)
   
   ctd.time = subset(ctd, DateTime >= time.min &
-                         DateTime <= time.max)
-
+                      DateTime <= time.max)
+  
   temp.plot = ggplot() +
-    geom_line(aes(x = ctd$DateTime, y = ctd$Temp_DegC),
-              col = 'dodgerblue',
-              na.rm = TRUE,
-              cex = 1) +
+    geom_line(
+      aes(x = ctd$DateTime, y = ctd$Temp_DegC),
+      col = 'dodgerblue',
+      na.rm = TRUE,
+      cex = 1
+    ) +
     scale_x_datetime(
       breaks = date_breaks(time.step),
       limits = c(time.min, time.max),
@@ -147,12 +153,14 @@ plotDS = function(speed,
     if (is.null(temp.range) == FALSE) {
       scale_y_continuous(limits = c(temp.range[1], temp.range[2]))
     }
-
+  
   sal.plot = ggplot() +
-    geom_line(aes(x = ctd$DateTime, y = ctd$Saln_PSU),
-              col = 'dodgerblue',
-              na.rm = TRUE,
-              cex = 1) +
+    geom_line(
+      aes(x = ctd$DateTime, y = ctd$Saln_PSU),
+      col = 'dodgerblue',
+      na.rm = TRUE,
+      cex = 1
+    ) +
     scale_x_datetime(
       breaks = date_breaks(time.step),
       limits = c(time.min, time.max),
@@ -166,14 +174,14 @@ plotDS = function(speed,
     if (is.null(sal.range) == FALSE) {
       scale_y_continuous(limits = c(sal.range[1], sal.range[2]))
     }
-
-
+  
+  
   # Plot pH and PUC data
   seafet$DateTime = ymd_hms(seafet$DateTime)
-
+  
   seafet.time = subset(seafet, DateTime >= time.min &
                          DateTime <= time.max)
-
+  
   if (is.null(puc) == TRUE) {
     pH.plot = ggplot() +
       geom_line(aes(x = seafet.time$DateTime, y = seafet.time$pH),
@@ -199,24 +207,25 @@ plotDS = function(speed,
         scale_y_continuous(limits = c(pH.range[1], pH.range[2]))
       }
   } else {
-    if (read.csv == TRUE) {
-      puc = read.csv(puc)
-      puc$DateTimeUTC = mdy_hm(puc$DateTimeUTC)
-      puc.subset = subset(puc, DateTimeUTC >= time.min & DateTimeUTC <= time.max)
-    } else {
-      puc = puc
-      puc.subset = subset(puc, DateTimeUTC >= time.min & DateTimeUTC <= time.max)
-    }
-
+    puc = read.csv(puc)
+    puc$DateTimeUTC_Start = ymd_hms(puc$DateTimeUTC)
+    puc$DateTimeUTC_End = puc$DateTimeUTC_Start + lubridate::minutes(45)
+    puc.subset = subset(puc,
+                        DateTimeUTC_Start >= time.min & DateTimeUTC_Start <= time.max)
+    
     pH.plot = ggplot() +
       geom_line(aes(x = seafet.time$DateTime, y = seafet.time$pH),
                 col = 'dodgerblue',
                 cex = 1)  +
-      geom_point(
-        aes(x = puc.subset$DateTimeUTC, y = puc.subset$pH),
-        col = 'tomato1',
-        pch = 15,
-        cex = 2
+      geom_rect(
+        data = puc.subset,
+        mapping = aes(
+          xmin = DateTimeUTC_Start,
+          xmax = DateTimeUTC_End,
+          ymin = pH - 0.002,
+          ymax = pH + 0.002
+        ),
+        fill = 'tomato1'
       ) +
       scale_x_datetime(
         breaks = date_breaks(time.step),
@@ -240,26 +249,28 @@ plotDS = function(speed,
   }
   
   if (write.csv == TRUE) {
-    write.csv(ctd.time, 
-              paste0(ctd.time$ShallowCTDID[1],'_trimmed.csv'),
+    write.csv(ctd.time,
+              paste0(ctd.time$ShallowCTDID[1], '_trimmed.csv'),
               row.names = FALSE)
     
-    write.csv(seafet.time, 
-              paste0("seafet",'_trimmed.csv'),
+    write.csv(seafet.time,
+              paste0("seafet", '_trimmed.csv'),
               row.names = FALSE)
-  } 
-
+  }
+  
   # Combine all plots
-
-  all.ds = ggarrange(speed.plot,
-            direction.plot,
-            pressure.plot,
-            temp.plot,
-            sal.plot,
-            pH.plot,
-            nrow = 6,
-            align = 'hv')
-
+  
+  all.ds = ggarrange(
+    speed.plot,
+    direction.plot,
+    pressure.plot,
+    temp.plot,
+    sal.plot,
+    pH.plot,
+    nrow = 6,
+    align = 'hv'
+  )
+  
   return(
     list(
       speed.plot = speed.plot,
@@ -271,7 +282,7 @@ plotDS = function(speed,
       all.ds = all.ds
     )
   )
-
+  
   print(all.ds)
-
+  
 }

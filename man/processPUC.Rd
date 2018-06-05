@@ -11,7 +11,7 @@ processPUC(puc.file, ctd.file, tz.in = "UTC", tz.out = "UTC", write.csv = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{puc.file}{CSV file of PUC sample metadata exported from CTD database. Must have a "DateTimeLocal" column that specifies start date and time of sample collection.
+  \item{puc.file}{CSV file of PUC sample metadata exported from CTD database. Must have a "DateTimeSample" column that specifies start date and time of sample collection.
 }
   \item{ctd.file}{CSV file of paired CTD time series}
   \item{tz.in}{Time zone of PUC deployment data, default is \code{UTC}}

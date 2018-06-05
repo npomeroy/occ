@@ -2,7 +2,8 @@ processCTD_moored = function(file,
                              tz.in = "UTC",
                              tz.out = "UTC",
                              write.csv = TRUE,
-                             SN3029 = FALSE) {
+                             SN3029 = FALSE,
+                             oxygen = TRUE) {
   data = read.ctd.sbe(file)
   name = file_path_sans_ext(basename(file))
   pressure = data[['pressure']]
@@ -64,6 +65,10 @@ processCTD_moored = function(file,
     df.raw$Cond_S_per_m = conductivity
   }
   
+  if (oxygen == TRUE){
+    df.raw$Oxygen_mgL = data[['oxygen']]
+  }
+  
   df = subset(df.raw, Saln_PSU > 20)
   
   seafet.time = format(date, format = "%Y-%m-%d %H:%M:%S")
@@ -90,6 +95,6 @@ processCTD_moored = function(file,
   
   
   
-  return(list(ctd.ts = df, seafet.ts = df.seafet))
+  return(df)
   
 }
