@@ -1,19 +1,29 @@
-processSTR = function(file) {
+processSTR = function(file, model = c("SBE","RBR")) {
   # Set environment variables to UTC
   Sys.setenv(TZ = 'UTC')
 
-  #Load data
-  test = read.csv(file, header = FALSE)[1:20 ,]
-
-  #Find number of rows to skip in header
-  skip = min(which(test == "Date")) - 1
-
-  #Skip header
-  str = read.csv(file, skip = skip)
-
-  #Concatenate date and time
-  str$DateTime = ymd_hms(paste0(str$Date, str$Time), tz = "UTC")
-
+  if (model == "SBE") {
+    #Load data
+    test = read.csv(file, header = FALSE)[1:20 ,]
+    
+    #Find number of rows to skip in header
+    skip = min(which(test == "Date")) - 1
+    
+    #Skip header
+    str = read.csv(file, skip = skip)
+    
+    #Concatenate date and time
+    str$DateTime = ymd_hms(paste0(str$Date, str$Time), tz = "UTC")
+  }
+  
+  if (model == "RBR"){
+    str.rbr = read.oce(file)
+    DateTime = str.rbr[['time']]
+    Temperature = str.rbr[['temperature']]
+    str = data.frame(DateTime,Temperature)
+    str$DateTime = ymd_hms(str$DateTime,  tz = "UTC")
+  }
+  
   #Define function for "Close Window" button in JavaScript
   jscode = 'shinyjs.closeWindow = function() { window.close(); }'
 

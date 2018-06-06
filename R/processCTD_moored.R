@@ -4,6 +4,7 @@ processCTD_moored = function(file,
                              write.csv = TRUE,
                              SN3029 = FALSE,
                              oxygen = TRUE) {
+  
   data = suppressWarnings(read.ctd.sbe(file))
   name = file_path_sans_ext(basename(file))
   pressure = data[['pressure']]
@@ -61,11 +62,11 @@ processCTD_moored = function(file,
     'Density_Sigmat'
   )
   
-  if (is.null(conductivity) == FALSE){
+  if (is.null(conductivity) == FALSE) {
     df.raw$Cond_S_per_m = conductivity
   }
   
-  if (oxygen == TRUE){
+  if (oxygen == TRUE) {
     df.raw$Oxygen_mgL = data[['oxygen']]
   }
   
