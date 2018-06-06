@@ -55,5 +55,6 @@ processCTD_profile = function(dir) {
       }
     }
     write.csv(df, paste0(dir, name, '.csv'), row.names = FALSE)
+    print(paste(i,"of", length(temp), "casts processed"))
   }
 }
