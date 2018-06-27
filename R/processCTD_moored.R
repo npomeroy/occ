@@ -98,4 +98,6 @@ processCTD_moored = function(file,
   
   return(df)
   
+  print("Moored CTD data processed")
+  
 }

@@ -94,4 +94,5 @@ processADCP = function(file, write.csv = TRUE, tz.in = "UTC") {
     pressure = pressure.df
   ))
 
+  print("ADCP data processed")
 }

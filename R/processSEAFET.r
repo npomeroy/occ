@@ -75,4 +75,6 @@ processSEAFET = function(file,
   
   return(processed)
   
+  print("SeaFET data processed")
+  
 }
