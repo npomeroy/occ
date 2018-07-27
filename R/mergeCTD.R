@@ -33,11 +33,15 @@ mergeCTD = function(dir, cruise, group) {
     )
   }
   
+  paths = paste0(dir,filenames.csv)
   
-  df = rbind.fill(lapply(filenames.csv, function(x) {
-    read.csv(x)
-  }))
+  df = NULL
   
+  for (i in 1:length(paths)){
+    df.i = read.csv(paths[i])
+    df = rbind.fill(df, df.i)
+  }
+
   write_xlsx(df, path = paste0(cruise, "_", group, "_merged.xlsx"))
   print(paste("Casts from cruise", cruise, "and region", group, "merged in", dir))
 }
