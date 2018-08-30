@@ -12,7 +12,7 @@ processCTD_moored = function(file,
   temperature =  data[['temperature']]
   conductivity = data[['conductivity']]
   salinity =  data[['salinity']]
-  sigmaT =  data[['sigmaT']]
+  sigmaT =  data[['sigmaT']] 
   start.time = ymd_hms(data[['startTime']])
   year = year(start.time)
   

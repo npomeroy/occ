@@ -34,6 +34,7 @@ mergeCTD = function(dir, cruise, group) {
   }
   
   paths = paste0(dir,filenames.csv)
+  paths = paths[file.size(paths)>10]
   
   df = NULL
   
