@@ -1,7 +1,7 @@
-processSTR_v2 = function(file, model = c("SBE","RBR")) {
+processSTR_v2 = function(file, model = c("SBE", "RBR")) {
   # Set environment variables to UTC
   Sys.setenv(TZ = 'UTC')
-
+  
   if (model == "SBE") {
     #Load data
     test = read.csv(file, header = FALSE)[1:20 ,]
@@ -16,42 +16,42 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
     str$DateTime = ymd_hms(paste0(str$Date, str$Time), tz = "UTC")
   }
   
-  if (model == "RBR"){
+  if (model == "RBR") {
     str.rbr = read.oce(file)
     DateTime = str.rbr[['time']]
     Temperature = str.rbr[['temperature']]
-    str = data.frame(DateTime,Temperature)
+    str = data.frame(DateTime, Temperature)
     str$DateTime = ymd_hms(str$DateTime,  tz = "UTC")
   }
   
   #Define function for "Close Window" button in JavaScript
   jscode = 'shinyjs.closeWindow = function() { window.close(); }'
-
+  
   # Create user interface. This bit of code defines what will appear on the UI.
   ui <- fluidPage(
     mainPanel(
       br(),
-
+      
       # Paste file name at top of page
       h2(paste0(file_path_sans_ext(basename(
         file
       )))),
-
+      
       # "Be patient" text...these datasets are huge!
       h6("(Be patient...the plots may take a minute to load!)"),
       br(),
-
+      
       h5("1. Review the entire raw time series."),
-
+      
       # Display the raw time series
       plotlyOutput("whole.ts", height = "200px"),
-
+      
       br(),
-
+      
       h5(
-        "2. Click on time series below to select in situ start and end points. Gray scroll bars at bottom of plots adjust the time windows."
+        "2. Click on time series below to select in situ start and end points. Gray scroll bars at bottom of plots adjust the time windows. Select 'Use first' or 'Use last' buttons to use existing first or last date and time."
       ),
-
+      
       # Disploy the start and end plots of the time series
       fixedRow(column(
         6, plotlyOutput("start.plot", height = "400px")
@@ -62,48 +62,50 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
       style = 'padding:40px;'),
       
       # Option to use existing start and end dates
-      fixedRow(column(6,
-        actionButton("start.exist", "Use first date")
-       ),
-      column(6,
-        actionButton("end.exist", "Use last date")
-       )),
+      fixedRow(column(
+        6,
+        actionButton("start.exist", "Use first")
+      ),
+      column(
+        6,
+        actionButton("end.exist", "Use last")
+      )),
       
       br(),
-
+      
       # Display the selected start and end times
       fixedRow(
         column(6, verbatimTextOutput("start.select")),
         column(6, verbatimTextOutput("end.select"))
       ),
-
+      
       h5(
         "3. Review the resulting trimmed time series based on start and end time selected."
       ),
-
+      
       # Display the trimmed time series
       plotlyOutput("cut.ts", height = "200px"),
-
+      
       h5(
         "4. If you are happy with the trimmed time series, click the 'Save' button. A 'File saved' message will appear when file has saved successfully."
       ),
-
+      
       # Create a save button
       actionButton("save", "Save"),
-
+      
       useShinyalert(),
-
+      
       h5(
         "5. Once you have saved the file, click the 'Stop' button to stop the app."
       ),
-
+      
       # Create a "Close Window" button
       useShinyjs(),
-
+      
       extendShinyjs(text = jscode, functions = c("closeWindow")),
-
+      
       actionButton("close", "Stop app"),
-
+      
       br(),
       br(),
       br(),
@@ -111,13 +113,13 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
       br()
     )
   )
-
+  
   # This code creates the shiny server (i.e. the code that the app is actually running)
   server <- function(input, output) {
     # Create start and end time variables that change based on user input
     vals = reactiveValues(start.time = NULL,
                           end.time = NULL)
-
+    
     # Plot the raw time series
     output$whole.ts = renderPlotly({
       plot_ly(
@@ -126,10 +128,10 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
         y = ~ Temperature,
         mode = 'lines',
         type = 'scatter'
-
+        
       )
     })
-
+    
     # Plot the first month of the time series
     output$start.plot = renderPlotly({
       plot_ly(
@@ -171,13 +173,25 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
           "function(el, x) {
           Plotly.d3.select('.cursor-crosshair').style('cursor', 'default')} "
         )
-
+      
     })
-    if (input$start.exist > 0) {
-      vals$start.time = min(str$DateTime)
-      } else output$start.select = renderPrint ({
-      vals$start.time = event_data("plotly_click", source = 'S')
-
+    
+    
+    
+    output$start.select = renderPrint ({
+      observe({
+        if (input$start.exist > 0) {
+          vals$start.time$x = ymd_hms(str$DateTime[1], tz = 'UTC')
+        }
+        })
+      
+      observe({
+        if (is.null(vals$start.time) == TRUE) {
+          vals$start.time = event_data("plotly_click", source = 'S')
+        }
+      })
+      
+      
       if (length(vals$start.time) == 0) {
         "Select a start time"
       } else {
@@ -185,7 +199,7 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
         return(print(ymd_hms(vals$start.time$x, tz = 'UTC')))
       }
     })
-
+    
     output$end.plot = renderPlotly({
       plot_ly(
         str,
@@ -221,23 +235,34 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
           )
         )
     })
-
-    output$end.select = renderPrint ({
-      vals$end.time = event_data("plotly_click", source = 'E')
-
-      if (length(vals$end.time) == 0) {
-        "Select an end time"
-      } else {
-        cat("Selected end time is \n")
-        return(print(ymd_hms(vals$end.time$x, tz = 'UTC')))
+    
+    observe({
+      if (input$end.exist > 0) {
+        vals$end.time$x = tail(str$DateTime, n = 1)
       }
     })
-
+    
+    
+    output$end.select = renderPrint ({
+      
+        if (is.null(vals$end.time$x) == TRUE) {
+          vals$end.time = event_data("plotly_click", source = 'E') }
+        
+        if (length(vals$end.time) == 0) {
+          "Select an end time"
+        } else {
+          cat("Selected end time is \n")
+          return(print(ymd_hms(vals$end.time$x, tz = 'UTC')))
+        }
+      })
+      
     observeEvent(c(vals$start.time, vals$end.time), {
+      
+      
       str.subset = subset(str,
                           DateTime >= vals$start.time$x &
                             DateTime <= vals$end.time$x)
-
+      
       output$cut.ts = renderPlotly({
         plot_ly(
           str.subset,
@@ -251,8 +276,8 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
           )))
       })
     })
-
-
+    
+    
     observe({
       if (input$save > 0) {
         str.subset = subset(str,
@@ -265,7 +290,7 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
         str.subset$Hour = hour(str.subset$UTCDateTime)
         str.subset$Minute = minute(str.subset$UTCDateTime)
         str.subset$Second = second(str.subset$UTCDateTime)
-
+        
         str.df = str.subset[c("Year",
                               "Month",
                               "Day",
@@ -273,9 +298,9 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
                               "Minute",
                               "Second",
                               "Temperature")]
-
-
-
+        
+        
+        
         output.file = file(paste0(
           dirname(file),
           "/",
@@ -283,7 +308,7 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
           ".cdp"
         ),
         "wb")
-
+        
         write.table(
           str.df,
           file = output.file,
@@ -292,27 +317,27 @@ processSTR_v2 = function(file, model = c("SBE","RBR")) {
           sep = "\t",
           eol = "\n"
         )
-
+        
         close(output.file)
-
-plot = ggplot(data = str.subset) +
-  geom_line(aes(x = ymd_hms(DateTime), y = Temperature), col = 'dodgerblue') +
-  theme_bw() +
-  scale_x_datetime(breaks = date_breaks("4 months"),
-                   labels = date_format("%m/%y")) +
-  ylab(expression(atop(
-    paste("Temperature (", degree, "C)")
-  ))) +
-  theme(axis.title.x = element_blank())
-
-box = ggplot(data = str.subset) +
-  geom_boxplot(aes(x = "", y = Temperature), fill = 'dodgerblue') +
-  theme_bw() +
-  theme(axis.title.x = element_blank(),
-        axis.title.y = element_blank())
-
-comb = ggarrange(plot, box, widths = c(6, 1))
-
+        
+        plot = ggplot(data = str.subset) +
+          geom_line(aes(x = ymd_hms(DateTime), y = Temperature), col = 'dodgerblue') +
+          theme_bw() +
+          scale_x_datetime(breaks = date_breaks("4 months"),
+                           labels = date_format("%m/%y")) +
+          ylab(expression(atop(
+            paste("Temperature (", degree, "C)")
+          ))) +
+          theme(axis.title.x = element_blank())
+        
+        box = ggplot(data = str.subset) +
+          geom_boxplot(aes(x = "", y = Temperature), fill = 'dodgerblue') +
+          theme_bw() +
+          theme(axis.title.x = element_blank(),
+                axis.title.y = element_blank())
+        
+        comb = ggarrange(plot, box, widths = c(6, 1))
+        
         ggsave(
           filename = paste0(
             dirname(file),
@@ -324,7 +349,7 @@ comb = ggarrange(plot, box, widths = c(6, 1))
           width = 12,
           height = 3
         )
-
+        
         write.csv(
           str.subset[c("DateTime", "Temperature")],
           paste0(
@@ -335,23 +360,23 @@ comb = ggarrange(plot, box, widths = c(6, 1))
           ),
           row.names = FALSE
         )
-
+        
       }
     })
-
+    
     observeEvent(input$save, {
       shinyalert("File saved",
                  type = 'success')
     })
-
+    
     observeEvent(input$close, {
       js$closeWindow()
       stopApp()
     })
   }
-
-
+  
+  
   # Run the shiny app
   shinyApp(ui, server)
-
+  
   }
