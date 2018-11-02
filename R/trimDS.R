@@ -30,10 +30,11 @@ trimDS = function(speed,
   
   seafet.trim = subset(seafet, DateTime >= start.time & DateTime <= end.time)
   ctd.trim = subset(ctd, DateTime >= start.time & DateTime <= end.time)
+  ctd.id = ctd.trim$ShallowCTDID[1]
   
   if (write.csv == TRUE) {
     write.csv(ctd.trim,
-              paste0(ctd.trim$ShallowCTDID[1], '_trimmed.csv'),
+              paste0('ctd', '_trimmed.csv'),
               row.names = FALSE)
     
     write.csv(seafet.trim,

@@ -42,7 +42,7 @@ mergeCTD = function(dir, cruise, group) {
     df.i = read.csv(paths[i])
     df = rbind.fill(df, df.i)
   }
-
+  write.csv(df, file = paste0(cruise, "_", group, "_merged.csv"), row.names = FALSE)
   write_xlsx(df, path = paste0(cruise, "_", group, "_merged.xlsx"))
   print(paste("Casts from cruise", cruise, "and region", group, "merged in", dir))
 }
