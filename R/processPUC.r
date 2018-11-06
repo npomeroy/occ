@@ -23,7 +23,7 @@ processPUC = function(puc.file,
   for (i in 1:nrow(puc.samples)) {
     SN.cast.subset.i = subset(
       ctd.data,
-      ShallowCTDID == puc.samples$ShallowCTDID[i] &
+      ShallowCTDID == paste(puc.samples$ShallowCTDID[i]) &
         DateTime >= puc.samples$DateTime_UTCStart[i] &
         DateTime <= puc.samples$DateTime_UTCEnd[i]
     )
