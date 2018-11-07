@@ -7,7 +7,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-trimDS(speed,direction,pressure, ctd, seafet, read.csv = TRUE, write.csv = TRUE)
+trimDS(speed,direction,pressure, ctd, seafet, read.csv = TRUE, write.csv = TRUE, filename)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,6 +18,7 @@ trimDS(speed,direction,pressure, ctd, seafet, read.csv = TRUE, write.csv = TRUE)
   \item{seafet}{SeaFET pH time series, output of \code{processSEAFET}.}
    \item{read.csv}{If \code{TRUE}, read data from CSV files. If \code{FALSE}, read data frames from R workspace. Default is \code{TRUE}.}
     \item{write.csv}{If \code{TRUE}, write trimmed CTD and SeaFET data to CSV files. Default is \code{FALSE}.}
+    \item{filename}{Leading filename for output files (e.g. "HA1801_Line_JAR11_DS")}
 }
 }
 \value{
