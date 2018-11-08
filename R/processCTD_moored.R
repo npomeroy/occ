@@ -41,7 +41,7 @@ processCTD_moored = function(file,
     
     date = force_tz(date, tz = tz.in)
     date = with_tz(date, tz = tz.out)
-    sigmaT =  data[['density']] 
+    sigmaT =  data[['density']] - 1000
     
   }
   
