@@ -12,7 +12,6 @@ processCTD_moored = function(file,
   temperature =  data[['temperature']]
   conductivity = data[['conductivity']]
   salinity =  data[['salinity']]
-  sigmaT =  data[['sigmaT']] 
   start.time = ymd_hms(data[['startTime']])
   year = year(start.time)
   
@@ -27,6 +26,7 @@ processCTD_moored = function(file,
     
     date = origin + time.raw * 3600 * 24 - days(1)
     date = with_tz(date, tz = tz.out)
+    sigmaT =  data[['sigmaT']] 
   }
   
   
@@ -41,6 +41,7 @@ processCTD_moored = function(file,
     
     date = force_tz(date, tz = tz.in)
     date = with_tz(date, tz = tz.out)
+    sigmaT =  data[['density']] 
     
   }
   

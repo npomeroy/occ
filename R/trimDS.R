@@ -22,6 +22,7 @@ trimDS = function(speed,
     seafet = seafet
   }
 
+  
   speed$DateTimeUTC = ymd_hms(speed$DateTimeUTC)
   direction$DateTimeUTC = ymd_hms(direction$DateTimeUTC)
   pressure$DateTimeUTC = ymd_hms(pressure$DateTimeUTC)
