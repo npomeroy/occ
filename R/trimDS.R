@@ -61,10 +61,10 @@ trimDS = function(speed,
   adcp.long = data.frame(adcp.long[order(adcp.long$DateTimeUTC),])
   colnames(pressure) = c("DateTimeUTC","Pressure_db")
     
-  seafet.trim = subset(seafet, DateTime >= start.time & DateTime <= end.time)
+  seafet.trim = subset(seafet, DateTimeUTC >= start.time & DateTimeUTC <= end.time)
   colnames(seafet.trim) = c("DateTimeUTC","pH","Temp_degC")
   
-  ctd.trim = subset(ctd, DateTime >= start.time & DateTime <= end.time)
+  ctd.trim = subset(ctd, DateTimeUTC >= start.time & DateTimeUTC <= end.time)
   ctd.id = ctd.trim$ShallowCTDID[1]
   
   if (write.csv == TRUE) {
