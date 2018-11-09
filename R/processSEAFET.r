@@ -48,7 +48,7 @@ processSEAFET = function(file,
     temp = data$V6
     
     processed = data.frame(date, pH_ext, temp)
-    colnames(processed) = c('DateTime', 'pH', 'Temp')
+    colnames(processed) = c('DateTimeUTC', 'pH', 'Temp')
   }
   
   if (average == TRUE) {
@@ -56,7 +56,7 @@ processSEAFET = function(file,
       group_by(round_date(processed$DateTime, "1 minute")) %>%
       summarize(pH = mean(pH, na.rm = TRUE),
                 Temp = mean(Temp, na.rm = TRUE))
-    colnames(processed) = c('DateTime', 'pH', 'Temp')
+    colnames(processed) = c('DateTimeUTC', 'pH', 'Temp')
   }
   
   
