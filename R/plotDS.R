@@ -159,14 +159,14 @@ plotDS = function(speed,
     theme(axis.title.x = element_blank())
   
   # Plot CTD data
-  ctd$DateTime = ymd_hms(ctd$DateTime)
+  ctd$DateTimeUTC = ymd_hms(ctd$DateTimeUTC)
   
-  ctd.time = subset(ctd, DateTime >= time.min &
-                      DateTime <= time.max)
+  ctd.time = subset(ctd, DateTimeUTC >= time.min &
+                      DateTimeUTC <= time.max)
   
   temp.plot = ggplot() +
     geom_line(
-      aes(x = ctd$DateTime, y = ctd$Temp_DegC),
+      aes(x = ctd$DateTimeUTC, y = ctd$Temp_DegC),
       col = 'dodgerblue',
       na.rm = TRUE,
       cex = 1
@@ -187,7 +187,7 @@ plotDS = function(speed,
   
   sal.plot = ggplot() +
     geom_line(
-      aes(x = ctd$DateTime, y = ctd$Saln_PSU),
+      aes(x = ctd$DateTimeUTC, y = ctd$Saln_PSU),
       col = 'dodgerblue',
       na.rm = TRUE,
       cex = 1
@@ -209,7 +209,7 @@ plotDS = function(speed,
   if (oxygen == TRUE) {
     oxygen.plot = ggplot() +
       geom_line(
-        aes(x = ctd$DateTime, y = ctd$Oxygen_mgL),
+        aes(x = ctd$DateTimeUTC, y = ctd$Oxygen_mgL),
         col = 'dodgerblue',
         na.rm = TRUE,
         cex = 1
@@ -230,14 +230,14 @@ plotDS = function(speed,
 
 
 # Plot pH and PUC data
-seafet$DateTime = ymd_hms(seafet$DateTime)
+seafet$DateTimeUTC = ymd_hms(seafet$DateTimeUTC)
 
-seafet.time = subset(seafet, DateTime >= time.min &
-                       DateTime <= time.max)
+seafet.time = subset(seafet, DateTimeUTC >= time.min &
+                       DateTimeUTC <= time.max)
 
 if (is.null(puc) == TRUE) {
   pH.plot = ggplot() +
-    geom_line(aes(x = seafet.time$DateTime, y = seafet.time$pH),
+    geom_line(aes(x = seafet.time$DateTimeUTC, y = seafet.time$pH),
               col = 'dodgerblue',
               cex = 1)  +
     scale_x_datetime(
@@ -264,7 +264,7 @@ if (is.null(puc) == TRUE) {
                         DateTimeUTC_Start <= time.max)
   
   pH.plot = ggplot() +
-    geom_line(aes(x = seafet.time$DateTime, y = seafet.time$pH),
+    geom_line(aes(x = seafet.time$DateTimeUTC, y = seafet.time$pH),
               col = 'dodgerblue',
               cex = 1)  +
     geom_rect(

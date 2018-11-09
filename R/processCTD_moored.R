@@ -55,7 +55,7 @@ processCTD_moored = function(file,
                       sigmaT)
   colnames(df.raw) = c(
     'ShallowCTDID',
-    'DateTime',
+    'DateTimeUTC',
     'Pressure_db',
     'Depth_m',
     'Temp_DegC',
