@@ -60,10 +60,11 @@ trimDS = function(speed,
   colnames(adcp.long) = c("DateTimeUTC", "HeightBin_m", "Speed_ms","Direction_deg")
   adcp.long = data.frame(adcp.long[order(adcp.long$DateTimeUTC),])
   colnames(pressure) = c("DateTimeUTC","Pressure_db")
-    
-  seafet.trim = subset(seafet, DateTimeUTC >= start.time & DateTimeUTC <= end.time)
-  colnames(seafet.trim) = c("DateTimeUTC","pH","Temp_degC")
   
+  seafet$DateTime = ymd_hms(seafet$DateTime)  
+  colnames(seafet) = c("DateTimeUTC","pH","Temp_degC")
+  seafet.trim = subset(seafet, DateTimeUTC >= start.time & DateTimeUTC <= end.time)
+
   ctd.trim = subset(ctd, DateTimeUTC >= start.time & DateTimeUTC <= end.time)
   ctd.id = ctd.trim$ShallowCTDID[1]
   
