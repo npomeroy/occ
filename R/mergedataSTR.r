@@ -35,7 +35,7 @@ mergedataSTR = function(str.file, lookup.file, output.dir){
   data$RegionCode = lookup.SN$RegionCode
   data$Location = lookup.SN$Location
   data$LocationCode = lookup.SN$LocationCode
-  data$REA_site = ifelse(is.null(nrow(lookup.SN$REA_site)),NA,lookup.SN$REA_site)
+  data$REA_site = as.factor(ifelse(lookup.SN$REA_site == "",NA,as.character(lookup.SN$REA_site)))
   data$SiteTag = lookup.SN$SiteTag
   data$DeployCruise = lookup.SN$DeployCruise
   data$RetrieveCruise = paste(path.str)
