@@ -40,7 +40,7 @@ mergedataSTR = function(str.file, lookup.file, output.dir){
   data$DeployCruise = lookup.SN$DeployCruise
   data$RetrieveCruise = paste(path.str)
   
-  output.name = paste0(first(data$RetrieveCruise),"_", first(data$LocationCode),"_SBE",SN,"_",round(first(data$Depth_m)),"m")
+  output.name = paste0(first(data$RetrieveCruise),"_", first(data$REA_site),"_SBE",SN,"_",round(first(data$Depth_m)),"m")
   
   write.csv(data, paste0(output.dir,output.name,".csv"), row.names = FALSE)
   
